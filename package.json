@@ -2,7 +2,7 @@
   "name": "telegramBot",
   "lockfileVersion": 2,
   "requires": true,
-  "main": "telegramBot.js",
+  "main": "telegramBot.mjs",
   "packages": {},
   "scripts": {
     "start": "node telegramBot.mjs"
