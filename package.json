@@ -2,7 +2,15 @@
   "name": "telegramBot",
   "lockfileVersion": 2,
   "requires": true,
+  "main": "telegramBot.js",
   "packages": {},
+  "scripts": {
+    "start": "node telegramBot.mjs"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "node-telegram-bot-api": "^0.57.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Syndicalyst/telegram-bot"
