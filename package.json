@@ -5,7 +5,7 @@
   "main": "telegramBot.mjs",
   "packages": {},
   "scripts": {
-    "start": "set PORT=5000 ; node telegramBot.mjs"
+    "start": "node telegramBot.mjs"
   },
   "dependencies": {
     "axios": "^0.27.2",
