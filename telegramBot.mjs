@@ -1,6 +1,6 @@
 process.env.NTBA_FIX_319 = 1;
 process.env["NTBA_FIX_350"] = 1;
-import TelegramBot from '../modules/node_modules/node-telegram-bot-api/index.js';
+import TelegramBot from 'node-telegram-bot-api';
 import {displayWeather} from './utils.mjs'
 
 const token = '5557923652:AAHrp3l661za4H6CWIi_BUAi6NCCP48GpU8';
