@@ -1,4 +1,4 @@
-import axios from '../modules/node_modules/axios/index.js';
+import axios from 'axios';
 
 const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=50.4333&lon=30.5167&lang=ua&units=metric&exclude=hourly,daily&appid=4c64e890924bf1087d8af4018ace8eed'
  
