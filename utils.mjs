@@ -16,10 +16,10 @@ let formatDate = (date) => {
 export function displayWeather(bot, chatId, action) {
   let str = '';
   axios.get(url).then(function (response) {
-    let tempDate = new Date(response.data.list[0].dt_txt);
+    let tempDate = new Date(response.data.list[0].dt_txt).toLocaleDateString('ru', { weekday:"long", month:"long", day:"numeric"});
 
     str += `Погода в Киеве на сегодня: `
-    str += `\n\n${tempDate.toLocaleDateString('ru', { weekday:"long", month:"long", day:"numeric"})}: `;
+    str += `\n\n${tempDate.charAt(0).toUpperCase() + tempDate.slice(1)}: `;
 
     (response.data.list).forEach(element => {
 
