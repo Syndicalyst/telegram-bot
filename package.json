@@ -4,9 +4,6 @@
   "requires": true,
   "main": "telegramBot.mjs",
   "packages": {},
-  "scripts": {
-    "start": "node telegramBot.mjs"
-  },
   "dependencies": {
     "axios": "^0.27.2",
     "node-telegram-bot-api": "^0.57.0"
