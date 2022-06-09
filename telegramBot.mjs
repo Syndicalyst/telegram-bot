@@ -7,15 +7,15 @@ const token = '5557923652:AAHrp3l661za4H6CWIi_BUAi6NCCP48GpU8';
 const bot = new TelegramBot(token, { polling: true });
 
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, `Привіт я зможу відобразити погоду за допомогою команди /weather. Користуйтесь на здоров'я`)
+  bot.sendMessage(msg.chat.id, `Привет пользователь, я могу отобразить погоду на неделю с помощью команды /weather. Пользуйтесь на здоровье!`)
 });
 
 bot.onText(/\/weather/, (msg) => {
-  bot.sendMessage(msg.chat.id, "Відобразити погоду на тиждень: ", {
+  bot.sendMessage(msg.chat.id, "Отобразить погоду на неделю: ", {
     "reply_markup": {
       "inline_keyboard": [
-        [{ text: "Відобразити погоду на кожні 3 години", callback_data: "3"}],
-        [{ text: "Відобразити погоду на кожні 6 годин", callback_data: "6" }],
+        [{ text: "Отобразить погоду на каждые 3 часа", callback_data: "3"}],
+        [{ text: "Отобразить погоду на каждые 6 часов", callback_data: "6" }],
       ],
     },
   });

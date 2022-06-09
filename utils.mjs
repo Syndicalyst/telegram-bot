@@ -24,8 +24,10 @@ export function displayWeather(bot, chatId, action) {
     (response.data.list).forEach(element => {
 
       let day = new Date(element.dt_txt);
-      let formattedDay = day.toLocaleDateString('ru', { weekday:"long", month:"long", day:"numeric"})
+      let formattedDay = day.toLocaleDateString('ru', { weekday:"long", month:"long", day:"numeric"});
+      formattedDay[0] = formattedDay[0].toUpperCase();
       let dayTime = formatDate(new Date(element.dt_txt));
+
       if (day.getHours() % +action == 0) {
         if (tempDate.getYear() != day.getYear() || tempDate.getMonth() != day.getMonth() || tempDate.getDate() != day.getDate()) {
           str += (`\n\n${formattedDay}: `);
