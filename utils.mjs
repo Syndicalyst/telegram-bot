@@ -54,7 +54,7 @@ export function getPrivateCashCurrency(bot, chatId) {
     str += `\nКурс валют в ПриватБанке (наличные) на ${new Date().toLocaleDateString('ru', {month:"long", day:"numeric", year: 'numeric'})}\n`;
     (response.data).forEach(el => {
       if (el.ccy == 'USD' || el.ccy == 'EUR') {
-        str += `  \n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
+        str += `  \n\n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
       }
     });
     bot.sendMessage(chatId, str);
@@ -67,7 +67,7 @@ export function getPrivateNoncashCurrency(bot, chatId) {
     str += `\nКурс валют в ПриватБанке (безналичные) на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}\n`;
     (response.data).forEach(el => {
       if (el.ccy == 'USD' || el.ccy == 'EUR') {
-        str += `  \n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
+        str += `  \n\n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
       }
     });
     bot.sendMessage(chatId, str);
@@ -78,10 +78,10 @@ export function getMonoCurrency(bot, chatId, timeInterval) {
   let str = '';
   if (timeInterval / 60000 > 60) {
     axios.get(monoUrl).then((response) => {
-      str += `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}\n`;
+      str += `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
       (response.data).forEach(el => {
         if (el.currencyCodeA == 840 || el.currencyCodeA == 978 && el.currencyCodeB == 980) {
-          str += `  \n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \nпокупка: ${el.rateBuy} \nпродажа: ${el.rateSell}`;
+          str += `  \n\n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \nпокупка: ${el.rateBuy} \nпродажа: ${el.rateSell}`;
         }
       });
       bot.sendMessage(chatId, str);
