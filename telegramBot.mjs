@@ -5,6 +5,7 @@ import * as utils from './utils.mjs'
 
 const token = '5557923652:AAHrp3l661za4H6CWIi_BUAi6NCCP48GpU8';
 const bot = new TelegramBot(token, { polling: true });
+let launchTime = Date.now();
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `Привет пользователь, с помощью команды /weather я могу отобразить погоду на неделю или с помощью команды /currency отобразить курс валют на даннай момент.`)
@@ -36,7 +37,6 @@ bot.onText(/\/currency/, (msg) => {
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
   const action = callbackQuery.data;
   const msg = callbackQuery.message;
-  let launchTime = Date.now();
 
   if (action === '3') {
     utils.displayWeather(bot, msg.chat.id, action);
@@ -53,5 +53,6 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
   if (action === 'mono') {
     let monoCurrencyTime = Date.now();
     utils.getMonoCurrency(bot, msg.chat.id, monoCurrencyTime - launchTime);
+    launchTime = monoCurrencyTime;
   }
 });
