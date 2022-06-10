@@ -5,7 +5,6 @@ const weatherUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=50.4333
 const privatUrlCash = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5';
 const privatUrlNoncash = 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11';
 const monoUrl = 'https://api.monobank.ua/bank/currency';
-let monoCashe = '';
  
 let formatDate = (date) => {
 
@@ -20,6 +19,7 @@ let formatDate = (date) => {
 
 export function displayWeather(bot, chatId, action) {
   let str = '';
+
   axios.get(weatherUrl).then(function (response) {
     let tempDate = new Date(response.data.list[0].dt_txt);
     let tempDateString = tempDate.toLocaleDateString('ru', { weekday:"long", month:"long", day:"numeric"});
@@ -50,8 +50,9 @@ export function displayWeather(bot, chatId, action) {
 
 export function getPrivateCashCurrency(bot, chatId) {
   let str = '';
+
   axios.get(privatUrlCash).then((response) => {
-    str += `\nКурс валют в ПриватБанке (наличные) на ${new Date().toLocaleDateString('ru', {month:"long", day:"numeric", year: 'numeric'})}\n`;
+    str += `\nКурс валют в ПриватБанке (наличные) на ${new Date().toLocaleDateString('ru', {month:"long", day:"numeric", year: 'numeric'})}`;
     (response.data).forEach(el => {
       if (el.ccy == 'USD' || el.ccy == 'EUR') {
         str += `  \n\n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
@@ -63,8 +64,9 @@ export function getPrivateCashCurrency(bot, chatId) {
 
 export function getPrivateNoncashCurrency(bot, chatId) {
   let str = '';
+
   axios.get(privatUrlNoncash).then((response) => {
-    str += `\nКурс валют в ПриватБанке (безналичные) на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}\n`;
+    str += `\nКурс валют в ПриватБанке (безналичные) на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
     (response.data).forEach(el => {
       if (el.ccy == 'USD' || el.ccy == 'EUR') {
         str += `  \n\n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
@@ -74,20 +76,21 @@ export function getPrivateNoncashCurrency(bot, chatId) {
   });
 }
 
-export function getMonoCurrency(bot, chatId, timeInterval) {
+export function getMonoCurrency(bot, chatId, monoCashe) {
   let str = '';
-  if (timeInterval / 60000 > 60) {
-    axios.get(monoUrl).then((response) => {
-      str += `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
-      (response.data).forEach(el => {
-        if (el.currencyCodeA == 840 || el.currencyCodeA == 978 && el.currencyCodeB == 980) {
-          str += `  \n\n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \nпокупка: ${el.rateBuy} \nпродажа: ${el.rateSell}`;
-        }
-      });
-      bot.sendMessage(chatId, str);
-      monoCashe = str;
-    }) 
-  } else {
-    bot.sendMessage(chatId, monoCashe);
-  };
+
+  axios.get(monoUrl).then((response) => {
+    str += `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
+    (response.data).forEach(el => {
+      if (el.currencyCodeA == 840 || el.currencyCodeA == 978 && el.currencyCodeB == 980) {
+        str += `  \n\n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \nпокупка: ${el.rateBuy} \nпродажа: ${el.rateSell}`;
+      }
+    });
+    bot.sendMessage(chatId, str);
+    monoCashe = setMonoCashe(str);
+  }) 
+}
+
+export function setMonoCashe(monoCashe) {
+  return monoCashe;
 }
