@@ -1,0 +1,17 @@
+[
+  {
+    "currencyCodeA": 840,
+    "currencyCodeB": 980,
+    "date": 1654809008,
+    "rateBuy": 31.6,
+    "rateSell": 32.7
+  },
+  {
+    "currencyCodeA": 978,
+    "currencyCodeB": 980,
+    "date": 1654840808,
+    "rateBuy": 33.43,
+    "rateSell": 34.8299
+  },
+  "2022-06-10T15:37:59.684Z"
+]

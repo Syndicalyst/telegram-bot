@@ -1,5 +1,6 @@
 import axios from 'axios';
 import cc from 'currency-codes';
+import fs from 'fs';
 
 const weatherUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat=50.4333&lon=30.5167&lang=ru&units=metric&exclude=hourly,daily&appid=4c64e890924bf1087d8af4018ace8eed'
 const privatUrlCash = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5';
@@ -49,13 +50,12 @@ export function displayWeather(bot, chatId, action) {
 }
 
 export function getPrivateCashCurrency(bot, chatId) {
-  let str = '';
+  let str = `\nКурс валют в ПриватБанке (наличные) на ${new Date().toLocaleDateString('ru', {month:"long", day:"numeric", year: 'numeric'})}`;
 
   axios.get(privatUrlCash).then((response) => {
-    str += `\nКурс валют в ПриватБанке (наличные) на ${new Date().toLocaleDateString('ru', {month:"long", day:"numeric", year: 'numeric'})}`;
     (response.data).forEach(el => {
       if (el.ccy == 'USD' || el.ccy == 'EUR') {
-        str += `  \n\n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
+        str += `\n\n${el.ccy} за ${el.base_ccy}: \n  покупка: ${(+el.buy).toFixed(2)} \n  продажа: ${(+el.sale).toFixed(2)}`;
       }
     });
     bot.sendMessage(chatId, str);
@@ -63,34 +63,44 @@ export function getPrivateCashCurrency(bot, chatId) {
 }
 
 export function getPrivateNoncashCurrency(bot, chatId) {
-  let str = '';
+  let str = `\nКурс валют в ПриватБанке (безналичные) на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
 
   axios.get(privatUrlNoncash).then((response) => {
-    str += `\nКурс валют в ПриватБанке (безналичные) на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
     (response.data).forEach(el => {
       if (el.ccy == 'USD' || el.ccy == 'EUR') {
-        str += `  \n\n${el.ccy} за ${el.base_ccy}: \nпокупка: ${(+el.buy).toFixed(2)} \nпродажа: ${(+el.sale).toFixed(2)}`;
+        str += `\n\n${el.ccy} за ${el.base_ccy}: \n  покупка: ${(+el.buy).toFixed(2)} \n  продажа: ${(+el.sale).toFixed(2)}`;
       }
     });
     bot.sendMessage(chatId, str);
   });
 }
 
-export function getMonoCurrency(bot, chatId, monoCashe) {
-  let str = '';
-
-  axios.get(monoUrl).then((response) => {
-    str += `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
+export function getMonoCurrency(bot, chatId) {
+  let str = `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
+  let jsonData = [];
+  let getUrl = axios.get(monoUrl).catch(e => { console.log(e.message)});
+  getUrl.then((response) => {
     (response.data).forEach(el => {
       if (el.currencyCodeA == 840 || el.currencyCodeA == 978 && el.currencyCodeB == 980) {
-        str += `  \n\n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \nпокупка: ${el.rateBuy} \nпродажа: ${el.rateSell}`;
+        jsonData.push(el);
+        str += `\n\n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \n  покупка: ${(el.rateBuy).toFixed(2)} \n  продажа: ${(el.rateSell).toFixed(2)}`;
       }
     });
+    jsonData.push(new Date());
     bot.sendMessage(chatId, str);
-    monoCashe = setMonoCashe(str);
-  }) 
+    fs.writeFileSync('./monoCashe.json', JSON.stringify(jsonData, null, '  '));
+  });
 }
 
-export function setMonoCashe(monoCashe) {
-  return monoCashe;
+export function getMonoCashe(cashe) {
+  let str = `\nКурс валют в Monobank на ${new Date().toLocaleDateString('ru', { month:"long", day:"numeric", year: 'numeric'})}`;
+  cashe.forEach(el => {
+    if (typeof(el) != 'object') {
+      return;
+    }
+    if (el.currencyCodeA == 840 || el.currencyCodeA == 978 && el.currencyCodeB == 980) {
+      str += `\n\n${cc.number(el.currencyCodeA).code} за ${cc.number(el.currencyCodeB).code}: \n  покупка: ${(el.rateBuy).toFixed(2)} \n  продажа: ${(el.rateSell).toFixed(2)}`;
+    }
+  });
+  return str;
 }
